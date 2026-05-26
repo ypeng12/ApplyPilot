@@ -1,0 +1,41 @@
+{
+  "manifest_version": 3,
+  "name": "ApplyPilot AI",
+  "version": "1.0.0",
+  "description": "Autofills job applications instantly and generates tailored short answers using Gemini AI.",
+  "permissions": [
+    "activeTab",
+    "scripting",
+    "storage",
+    "sidePanel"
+  ],
+  "host_permissions": [
+    "http://localhost:8000/*",
+    "https://*/*",
+    "http://*/*"
+  ],
+  "background": {
+    "service_worker": "background.js",
+    "type": "module"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "https://*.greenhouse.io/*",
+        "https://*.lever.co/*",
+        "https://*.ashbyhq.com/*",
+        "https://*.linkedin.com/*",
+        "http://localhost/*",
+        "http://127.0.0.1/*"
+      ],
+      "js": ["content.js"],
+      "run_at": "document_idle"
+    }
+  ],
+  "action": {
+    "default_title": "ApplyPilot AI"
+  },
+  "side_panel": {
+    "default_path": "src/sidebar/index.html"
+  }
+}

@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mock Greenhouse Job Application | Replit</title>
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background-color: #f3f4f6;
+      color: #1f2937;
+      margin: 0;
+      padding: 40px 20px;
+    }
+    .container {
+      max-width: 650px;
+      background: white;
+      margin: 0 auto;
+      padding: 40px;
+      border-radius: 8px;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    }
+    .header {
+      border-bottom: 2px solid #e5e7eb;
+      padding-bottom: 20px;
+      margin-bottom: 30px;
+    }
+    .company {
+      font-size: 1.1rem;
+      color: #6b7280;
+      text-transform: uppercase;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+    }
+    .role {
+      font-size: 1.8rem;
+      margin-top: 4px;
+      font-weight: 700;
+    }
+    .job-details {
+      background: #f9fafb;
+      border-left: 4px solid #a855f7;
+      padding: 16px;
+      margin-bottom: 30px;
+      font-size: 0.95rem;
+      line-height: 1.5;
+    }
+    .section-title {
+      font-size: 1.2rem;
+      border-bottom: 1px solid #e5e7eb;
+      padding-bottom: 8px;
+      margin-top: 30px;
+      margin-bottom: 20px;
+      font-weight: 600;
+    }
+    .form-group {
+      margin-bottom: 20px;
+    }
+    label {
+      display: block;
+      font-size: 0.9rem;
+      font-weight: 600;
+      margin-bottom: 6px;
+    }
+    .required {
+      color: #ef4444;
+      margin-left: 2px;
+    }
+    input[type="text"], input[type="email"], select, textarea {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid #d1d5db;
+      border-radius: 6px;
+      font-size: 0.95rem;
+      box-sizing: border-box;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+    input[type="text"]:focus, input[type="email"]:focus, select:focus, textarea:focus {
+      outline: none;
+      border-color: #a855f7;
+      box-shadow: 0 0 0 3px rgba(168, 85, 247, 0.15);
+    }
+    textarea {
+      resize: vertical;
+      min-height: 100px;
+    }
+    .btn-submit {
+      background-color: #a855f7;
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      font-size: 1rem;
+      font-weight: 600;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background-color 0.2s ease;
+    }
+    .btn-submit:hover {
+      background-color: #9333ea;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <div class="header">
+      <span class="company" id="mock-company">Replit</span>
+      <h1 class="role" id="mock-role">Software Engineer Intern</h1>
+    </div>
+
+    <div class="job-details">
+      <h3>Job Description</h3>
+      <p>
+        At Replit, our mission is to bring the next billion software creators online. We are looking for an ambitious Software Engineering Intern to build next-generation AI developer tools.
+      </p>
+      <p>
+        <strong>Requirements:</strong> Experience with React, TypeScript, and FastAPI is a big plus. Passion for developer experience and lightweight agents.
+      </p>
+    </div>
+
+    <form id="application_form" onsubmit="event.preventDefault(); alert('测试提交成功！数据未发送到真实服务器。');">
+      
+      <div class="section-title">Personal Information</div>
+
+      <div class="form-group">
+        <label for="first_name">First Name <span class="required">*</span></label>
+        <input type="text" id="first_name" name="first_name" required>
+      </div>
+
+      <div class="form-group">
+        <label for="last_name">Last Name <span class="required">*</span></label>
+        <input type="text" id="last_name" name="last_name" required>
+      </div>
+
+      <div class="form-group">
+        <label for="email">Email <span class="required">*</span></label>
+        <input type="email" id="email" name="email" required>
+      </div>
+
+      <div class="form-group">
+        <label for="phone">Phone <span class="required">*</span></label>
+        <input type="text" id="phone" name="phone" required>
+      </div>
+
+      <div class="section-title">Links</div>
+
+      <div class="form-group">
+        <label for="linkedin">LinkedIn URL</label>
+        <input type="text" id="linkedin" name="linkedin">
+      </div>
+
+      <div class="form-group">
+        <label for="github">GitHub URL</label>
+        <input type="text" id="github" name="github">
+      </div>
+
+      <div class="section-title">Application Questions</div>
+
+      <div class="form-group">
+        <label for="sponsorship">Will you require visa sponsorship? <span class="required">*</span></label>
+        <select id="sponsorship" name="sponsorship" required>
+          <option value="">-- Please select --</option>
+          <option value="Yes">Yes</option>
+          <option value="No">No</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="why-replit">Why are you interested in Replit? <span class="required">*</span></label>
+        <textarea id="why-replit" name="why-replit" required placeholder="Tell us why you want to join..."></textarea>
+      </div>
+
+      <div style="margin-top: 30px;">
+        <button type="submit" class="btn-submit">Submit Application</button>
+      </div>
+
+    </form>
+  </div>
+
+</body>
+</html>

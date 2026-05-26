@@ -1,0 +1,93 @@
+[
+  {
+    "field_id": "first_name",
+    "label": "First Name",
+    "type": "text",
+    "filled_value": "Yuliang",
+    "confidence": "🟢 high"
+  },
+  {
+    "field_id": "last_name",
+    "label": "Last Name",
+    "type": "text",
+    "filled_value": "Peng",
+    "confidence": "🟢 high"
+  },
+  {
+    "field_id": "preferred_name",
+    "label": "Preferred First Name",
+    "type": "text",
+    "filled_value": "Yuliang",
+    "confidence": "🟢 high"
+  },
+  {
+    "field_id": "email",
+    "label": "Email",
+    "type": "text",
+    "filled_value": "yuliang@example.com",
+    "confidence": "🟢 high"
+  },
+  {
+    "field_id": "country",
+    "label": "Country",
+    "type": "text",
+    "filled_value": "United States",
+    "confidence": "🟢 high"
+  },
+  {
+    "field_id": "phone",
+    "label": "Phone",
+    "type": "tel",
+    "filled_value": "+1 (555) 019-2834",
+    "confidence": "🟢 high"
+  },
+  {
+    "field_id": "question_5790508009",
+    "label": "LinkedIn Profile",
+    "type": "text",
+    "filled_value": "https://linkedin.com/in/yuliang-peng",
+    "confidence": "🟢 high"
+  },
+  {
+    "field_id": "question_5790509009",
+    "label": "Website",
+    "type": "text",
+    "filled_value": "https://yuliang.dev",
+    "confidence": "🟢 high"
+  },
+  {
+    "field_id": "question_5790510009",
+    "label": "Will you now or in the future require sponsorship to work in the US?",
+    "type": "text",
+    "filled_value": "No",
+    "confidence": "🟢 high"
+  },
+  {
+    "field_id": "question_5790511009",
+    "label": "If \"YES\", what is the basis of your current employment authorization?  And when does your current employment authorization expire? If H-1B, is there an approved I-140?",
+    "type": "textarea",
+    "filled_value": "N/A — I am authorized to work in the US and do not require sponsorship.",
+    "confidence": "🟢 high"
+  },
+  {
+    "field_id": "4010987009",
+    "label": "Gender",
+    "type": "text",
+    "filled_value": "Decline to Self Identify",
+    "confidence": "🟢 high"
+  },
+  {
+    "field_id": "4010988009",
+    "label": "Race",
+    "type": "text",
+    "filled_value": "Decline to Self Identify",
+    "confidence": "🟢 high"
+  },
+  {
+    "field_id": "4010989009",
+    "label": "Veteran status",
+    "type": "text",
+    "filled_value": "I am not a protected veteran",
+    "confidence": "🟢 high"
+  }
+]
