@@ -25,10 +25,9 @@ class FieldMapping(BaseModel):
     # Direct Map vs AI Generation vs Manual Review
     mapping_type: str = Field("direct", description="direct | ai_generate | select_option | manual_review")
     mapped_value: Any = Field(None, description="The content to inject into the input element")
-    
-    confidence: float = Field(1.0, description="Confidence score from 0.0 to 1.0")
-    reasoning: Optional[str] = Field(None, description="Explanation for mapping or generation decisions")
-    needs_review: bool = Field(False, description="Flagged for user double-checking")
+    confidence: float = Field(1.0, description="Confidence score between 0.0 and 1.0")
+    needs_review: bool = Field(False, description="Whether the field needs manual review")
+    reasoning: Optional[str] = Field(None, description="Explanation for mapping or missing information")
 
 class FieldMappingResponse(BaseModel):
     mappings: List[FieldMapping]

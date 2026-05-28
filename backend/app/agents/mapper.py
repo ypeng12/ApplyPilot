@@ -76,14 +76,14 @@ class GeminiMapperAgent:
         Map every detected FormField in the list to a FieldMapping.
         
         Rules:
-        1. **Direct Fields** (First Name, Last Name, Email, Phone, LinkedIn, GitHub, Portfolio URL, Location, City):
-           - mapping_type: "direct"
-           - mapped_value: Pull directly from the Profile Vault.
+        1. **Direct Fields** (First Name, Last Name, Email, Phone, LinkedIn, GitHub, Portfolio URL, Location, City, Gender, Race, Veteran Status, or any label matching a key in `custom_fields`):
+           - mapping_type: "direct" (or "select_option" if the field is a dropdown/radio option)
+           - mapped_value: Pull directly from the Profile Vault (or custom_fields). If full name is requested, combine first_name and last_name.
            - confidence: 1.0
            
         2. **Dropdown / Multiple Choice Options** (e.g. Work Authorization, Visa status, Gender, Education Level):
            - mapping_type: "select_option"
-           - mapped_value: Must match EXACTLY one of the strings inside `options` for that FormField. Compare user profile fields (e.g., requires_sponsorship) with the list of options to select the matching option.
+           - mapped_value: Must match EXACTLY one of the strings inside `options` for that FormField. Compare user profile fields (e.g., requires_sponsorship, gender, race, veteran_status) with the list of options to select the matching option. For demographic fields, if "Decline to Self Identify" or similar is selected in profile, choose the corresponding decline option from `options`.
            - confidence: 0.9 if matched, lower if ambiguous.
            
         3. **Open-ended Questions / Textareas** (e.g. "Why this company?", "Tell us about a project", "Cover Letter"):
@@ -96,9 +96,9 @@ class GeminiMapperAgent:
         4. **Uncertain / Unmapped Fields**:
            - mapping_type: "manual_review"
            - mapped_value: null
-           - confidence: 0.1 to 0.4
+           - confidence: 0.8 to 0.9
            - needs_review: true
-           - reasoning: Explain what information is missing from the profile or why it requires human attention.
+           - reasoning: Explain what information is missing from the profile or why it requires human attention. If not clear, just let the user fill it.
            
         Return the mappings structured exactly as required by the schema.
         """
@@ -117,3 +117,40 @@ class GeminiMapperAgent:
         
         parsed = FieldMappingResponse.model_validate_json(response.text)
         return parsed.mappings
+
+    async def parse_resume(self, resume_text: str) -> ProfileVault:
+        """
+        Parses resume text and extracts a structured ProfileVault object containing candidate's profile details.
+        """
+        prompt = f"""
+        You are an expert AI recruiter. Analyze the following raw text extracted from a candidate's resume and fill in the structured ProfileVault schema.
+        
+        Extract as much detail as possible, including first name, last name, email, phone, location, linkedin, github, portfolio, education, experience, projects, and skills.
+        
+        Guidelines:
+        1. Parse full name into first_name and last_name.
+        2. Format phone number cleanly (e.g. +1 (555) 123-4567).
+        3. For education and experience lists, accurately parse degree, major, company, role, dates, description bullet points, etc.
+        4. For requires_sponsorship, default to False, and authorized_to_work to True, unless explicitly mentioned otherwise in the text.
+        5. For EEO fields (gender, race, veteran_status, pronouns), default to the schema defaults if not found.
+        6. Fill in custom_fields and custom_qa as empty dicts/lists.
+        
+        Raw Resume Text:
+        ---
+        {resume_text}
+        ---
+        """
+        
+        config = types.GenerateContentConfig(
+            response_mime_type="application/json",
+            response_schema=ProfileVault,
+            temperature=0.1
+        )
+        
+        response = self.client.models.generate_content(
+            model=self.model,
+            contents=prompt,
+            config=config
+        )
+        
+        return ProfileVault.model_validate_json(response.text)

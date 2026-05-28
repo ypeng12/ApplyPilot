@@ -49,3 +49,12 @@ class ProfileVault(BaseModel):
     
     # Custom QA
     custom_qa: List[CustomQA] = Field(default=[], description="Custom reusable answers for common short questions")
+    
+    # EEO / Demographic Fields
+    gender: Optional[str] = Field("Decline to Self Identify", description="Gender demographic option")
+    race: Optional[str] = Field("Decline to Self Identify", description="Race or ethnicity demographic option")
+    veteran_status: Optional[str] = Field("I am not a protected veteran", description="Veteran status demographic option")
+    pronouns: Optional[str] = Field("He/him", description="Preferred pronouns")
+    
+    # Custom Fields from manual review fill history
+    custom_fields: Optional[Dict[str, str]] = Field(default={}, description="Custom key-value pairs of other form fields")

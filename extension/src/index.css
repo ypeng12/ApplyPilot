@@ -35,13 +35,19 @@
   padding: 0;
 }
 
+html, body, #root {
+  height: auto;
+  min-height: 100%;
+  margin: 0;
+  padding: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
 body {
   background-color: var(--bg-main);
   color: var(--text-main);
   font-family: var(--font-sans);
-  overflow-x: hidden;
-  height: 100vh;
-  width: 100vw;
   -webkit-font-smoothing: antialiased;
 }
 
@@ -89,7 +95,7 @@ body {
 .app-container {
   display: flex;
   flex-direction: column;
-  height: 100vh;
+  min-height: 100vh;
   position: relative;
   background: radial-gradient(ellipse at top, rgba(20, 10, 35, 0.5) 0%, var(--bg-main) 80%);
 }
@@ -192,7 +198,6 @@ body {
 /* Content Area */
 .tab-content {
   flex: 1;
-  overflow-y: auto;
   padding: 0 16px 24px 16px;
   display: flex;
   flex-direction: column;
@@ -414,4 +419,59 @@ textarea.input-glass {
 .pulse-yellow {
   background: var(--text-warning);
   box-shadow: 0 0 8px var(--text-warning);
+}
+
+/* Quick-Copy Dashboard styling */
+.copy-row-glass {
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+}
+
+.copy-row-glass:hover {
+  background: rgba(168, 85, 247, 0.08) !important;
+  border-color: rgba(168, 85, 247, 0.3) !important;
+  box-shadow: 0 0 10px rgba(168, 85, 247, 0.1);
+  transform: translateY(-1px);
+}
+
+.copy-row-glass:active {
+  transform: translateY(0);
+}
+
+.copy-row-glass.copied {
+  background: rgba(16, 185, 129, 0.08) !important;
+  border-color: rgba(16, 185, 129, 0.3) !important;
+  box-shadow: 0 0 10px rgba(16, 185, 129, 0.1);
+}
+
+.copy-action-btn {
+  opacity: 0.6;
+  transition: opacity 0.2s ease;
+}
+
+.copy-row-glass:hover .copy-action-btn {
+  opacity: 1;
+}
+
+.copy-tab-btn {
+  padding: 6px 12px;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid var(--border-glass);
+  color: var(--text-muted);
+  font-size: 0.75rem;
+  font-weight: 500;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.copy-tab-btn:hover {
+  color: var(--text-main);
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.copy-tab-btn.active {
+  color: var(--text-main);
+  background: rgba(168, 85, 247, 0.15);
+  border-color: rgba(168, 85, 247, 0.3);
 }
