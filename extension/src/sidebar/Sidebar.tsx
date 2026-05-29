@@ -207,7 +207,8 @@ export default function Sidebar() {
     veteran_status: 'I am not a protected veteran',
     pronouns: 'He/him',
     gemini_api_key: '',
-    backend_url: 'http://localhost:8000',
+    backend_url: 'https://applypilot-backend.onrender.com',
+
 
     custom_fields: {} as Record<string, string>,
     projects: [
@@ -1321,12 +1322,13 @@ export default function Sidebar() {
                   <label className="form-label" style={{ fontSize: '0.7rem', color: '#e9d5ff' }}>后端 API 接口地址</label>
                   <input 
                     type="text" 
-                    value={profile.backend_url || 'http://localhost:8000'} 
+                    value={profile.backend_url || 'https://applypilot-backend.onrender.com'} 
                     onChange={e => saveProfile({ ...profile, backend_url: e.target.value })}
                     className="input-glass"
-                    placeholder="http://localhost:8000"
+                    placeholder="https://applypilot-backend.onrender.com"
                     style={{ fontSize: '0.8rem' }}
                   />
+
                 </div>
               </div>
 
