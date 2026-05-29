@@ -40,6 +40,144 @@ interface FieldMapping {
 
 export default function Sidebar() {
   const [activeTab, setActiveTab] = useState<'apply' | 'copy' | 'profile' | 'chat'>('apply');
+  const [lang, setLang] = useState<'zh' | 'en'>('zh');
+
+  const changeLanguage = (newLang: 'zh' | 'en') => {
+    setLang(newLang);
+    if (typeof chrome !== 'undefined' && chrome.storage && chrome.storage.local) {
+      chrome.storage.local.set({ appLang: newLang });
+    } else {
+      localStorage.setItem('appLang', newLang);
+    }
+  };
+
+  const t = {
+    zh: {
+      applyTab: "投递匹配",
+      copyTab: "快速复制",
+      profileTab: "档案库",
+      chatTab: "智能对话",
+      scanBtn: "立即扫描当前表单",
+      scanning: "正在解析页面...",
+      scanWaitTitle: "开启一键表单秒填",
+      scanWaitDesc: "请在 Chrome 浏览器中打开 LinkedIn、Greenhouse、Lever 或 Ashby 的求职申请页面，然后点击下方按钮扫描网页表单。",
+      activeJobProfile: "当前求职岗位",
+      fieldsScanned: "个字段已扫描",
+      aiDraftNeeded: "简答题 AI 生成",
+      aiDraftDesc: "检测到当前表单有开放式的简答题（如 “Why this company?”），点击下方按钮让 Gemini 结合您的经历量身定制一份高分草稿。",
+      aiDraftBtn: "使用 Gemini 定制简答题答案",
+      aiDrafting: "正在生成高分答案...",
+      reviewTitle: "待填表单字段审阅",
+      reviewDesc: "我们在本地帮您锁定了以下映射，并在填充前供您审阅并微调：",
+      autofillBtn: "一键填充到浏览器页面",
+      autofillTip: "自动填充不会帮您递交。请在页面确认无误后再自行提交。",
+      rescanBtn: "重新扫描当前网页",
+      allMappedSuccess: "🎉 所有常规字段已完美自动匹配，无需任何检查！",
+      allMappedSub: "（姓名、邮箱、电话、代词、社交链接、 demographic、 sponsorship 等已在后台备妥）",
+      confidenceHigh: "自动匹配",
+      confidenceLow: "需确认",
+      confidenceAI: "AI 简答",
+      placeholderTextarea: "AI 会在此处生成回答，您也可以直接修改...",
+      placeholderInput: "未匹配到，请手动输入...",
+      copiedText: "已复制 ✔",
+      copyAction: "复制",
+      quickCopyTitle: "简历档案快速复制看板",
+      quickCopyDesc: "在遇到防爬或无法自动填充的表单时，您可在此一键复制档案信息，直接粘贴到目标页面中。",
+      catBasic: "👤 基本",
+      catWork: "💼 工作",
+      catEdu: "🎓 教育",
+      catSkills: "🛠️ 技能",
+      noData: "暂无数据",
+      profileTitle: "个人档案保险库 (Vault)",
+      profileSub: "您的档案数据仅保存在浏览器本地，隐私安全受到绝对保护。",
+      uploadTitle: "导入简历一键生成档案",
+      uploadDesc: "支持 PDF 或 TXT 简历。AI 将自动分析提取姓名、联系方式、社交链接和技能，帮您瞬间填充未来的求职表单！",
+      uploading: "正在使用 Gemini AI 智能提取简历数据...",
+      uploadSuccess: "🎉 简历解析成功！所有提取出的背景数据已载入下方档案库！",
+      saveBtn: "保存更改",
+      saveSuccess: "🎉 本地个人档案保存成功！数据已安全加密存储。",
+      chatTitle: "ApplyPilot AI 智能问答",
+      chatPlaceholderActive: "向 AI 提问、进行模拟面试或要求定制求职信...",
+      chatPlaceholderInactive: "请先扫描网页表单以开启完整对话...",
+      chatLoading: "AI 正在思考中，请稍候...",
+      chatSend: "发送",
+      chipCoverLetter: "✍️ 生成求职信",
+      chipAnalyze: "💡 分析匹配优势",
+      chipInterview: "💬 模拟面试提问",
+      copyFull: "复制全文",
+      downloadText: "下载文本 (.txt)",
+      copiedAlert: "📋 已成功复制求职信全文至剪贴板！",
+      downloadAlert: "📥 已成功下载求职信文本文件！",
+      apiSettings: "🔑 API 与连接设置 (Web Store 独立发布支持)",
+      apiSettingsSub: "支持自主配置 API 与后端。如需发布或在线使用，可在此配置您的密钥或在线服务器地址。",
+      apiKeyLabel: "Gemini API Key (可选，留空则使用后端默认配置)",
+      apiEndpointLabel: "后端 API 接口地址",
+    },
+    en: {
+      applyTab: "Match & Autofill",
+      copyTab: "Quick Copy",
+      profileTab: "Profile Vault",
+      chatTab: "AI Copilot",
+      scanBtn: "Scan Job Form Now",
+      scanning: "Scanning page...",
+      scanWaitTitle: "Unlock One-Click Autofill",
+      scanWaitDesc: "Please open a job application page on LinkedIn, Greenhouse, Lever, or Ashby, and click the button below to scan the form.",
+      activeJobProfile: "Active Job Profile",
+      fieldsScanned: "fields scanned",
+      aiDraftNeeded: "AI Short Answer Drafts",
+      aiDraftDesc: "We detected open-ended questions (e.g. 'Why this company?'). Click the button below to draft tailored answers using Gemini.",
+      aiDraftBtn: "Draft Answers with Gemini",
+      aiDrafting: "Drafting custom answers...",
+      reviewTitle: "Review & Refine Autofill Mappings",
+      reviewDesc: "We matched the following fields. Review and refine them before injecting into the webpage:",
+      autofillBtn: "Autofill Webpage Instantly",
+      autofillTip: "Autofill won't submit. Please review and click submit yourself on the form page.",
+      rescanBtn: "Rescan Current Webpage",
+      allMappedSuccess: "🎉 All standard fields successfully matched!",
+      allMappedSub: "(Name, email, phone, pronouns, links, sponsorship status, etc. are loaded and ready)",
+      confidenceHigh: "Auto-Matched",
+      confidenceLow: "Need Review",
+      confidenceAI: "AI Draft",
+      placeholderTextarea: "AI will generate the answer here. You can edit it directly...",
+      placeholderInput: "Not matched, type manually...",
+      copiedText: "Copied ✔",
+      copyAction: "Copy",
+      quickCopyTitle: "Profile Quick-Copy Dashboard",
+      quickCopyDesc: "For form fields that block autofill, click any field below to copy and paste manually.",
+      catBasic: "👤 Basic",
+      catWork: "💼 Work",
+      catEdu: "🎓 Education",
+      catSkills: "🛠️ Skills",
+      noData: "No data",
+      profileTitle: "Candidate Profile Vault",
+      profileSub: "Your background data is stored locally in your browser for absolute privacy.",
+      uploadTitle: "Import Resume to Build Profile",
+      uploadDesc: "Supports PDF and TXT. AI will parse your work history, skills, and links to instantly populate your Profile Vault!",
+      uploading: "AI is parsing your resume details...",
+      uploadSuccess: "🎉 Resume successfully parsed! Background loaded into Profile Vault below.",
+      saveBtn: "Save Profile",
+      saveSuccess: "🎉 Profile saved successfully in local storage.",
+      chatTitle: "ApplyPilot AI Copilot",
+      chatPlaceholderActive: "Ask career questions, run a mock interview, or draft documents...",
+      chatPlaceholderInactive: "Scan a job form first to unlock custom context...",
+      chatLoading: "AI is thinking, please wait...",
+      chatSend: "Send",
+      chipCoverLetter: "✍️ Draft Cover Letter",
+      chipAnalyze: "💡 Analyze Matching Strengths",
+      chipInterview: "💬 Run Mock Interview",
+      copyFull: "Copy Full text",
+      downloadText: "Download (.txt)",
+      copiedAlert: "📋 Copied text successfully!",
+      downloadAlert: "📥 Downloaded text file successfully!",
+      apiSettings: "🔑 API & Connection Settings",
+      apiSettingsSub: "Configure your own Gemini API Key or Cloud API Server to run completely independent.",
+      apiKeyLabel: "Gemini API Key (Optional, defaults to backend config)",
+      apiEndpointLabel: "API Server URL",
+    }
+  };
+
+  const cur = t[lang];
+
   const [loading, setLoading] = useState(false);
 
   // States for Quick-Copy Dashboard
@@ -109,11 +247,22 @@ export default function Sidebar() {
   };
 
   // Chat states
-  const [chatHistory, setChatHistory] = useState<{role: 'user' | 'model', content: string}[]>([
-    { role: 'model', content: '👋 你好！我是您的 AI 求职助手 ApplyPilot。我已加载了您的个人背景以及当前网页的岗位描述，有什么我可以帮您的？您也可以点击下方快捷操作来快速生成量身定制的求职信（Cover Letter）哦！' }
-  ]);
+  const [chatHistory, setChatHistory] = useState<{role: 'user' | 'model', content: string}[]>([]);
   const [chatInput, setChatInput] = useState('');
   const [chatLoading, setChatLoading] = useState(false);
+
+  useEffect(() => {
+    setChatHistory(prev => {
+      const defaultMsg = lang === 'zh'
+        ? '👋 你好！我是您的 AI 求职助手 ApplyPilot。我已加载了您的个人背景以及当前网页的岗位描述，有什么我可以帮您的？您也可以点击下方快捷操作来快速生成量身定制的求职信（Cover Letter）、分析岗位匹配度，或进行模拟面试哦！'
+        : '👋 Hello! I am ApplyPilot AI, your job application copilot. I have loaded your profile and the scanned job details. How can I assist you today? You can ask me to draft a cover letter, analyze your skill alignment, or start a mock interview!';
+      if (prev.length <= 1) {
+        return [{ role: 'model', content: defaultMsg }];
+      }
+      return prev;
+    });
+  }, [lang]);
+
 
   // Text file downloader helper
   const downloadTextFile = (filename: string, text: string) => {
@@ -171,9 +320,35 @@ export default function Sidebar() {
       console.error(e);
       // Fallback mock response for off-line/development sandbox
       setTimeout(() => {
-        setChatHistory([...updatedHistory, {
+        const lowerMsg = msg.toLowerCase();
+        let fallbackContent = "";
+        
+        if (lang === 'zh') {
+          if (lowerMsg.includes("cover letter") || lowerMsg.includes("求职信") || lowerMsg.includes("信")) {
+            fallbackContent = `✍️ **【求职信定制生成 (Cover Letter)】**\n\nDear Hiring Manager,\n\nI am writing to express my enthusiastic interest in the ${roleTitle || "Software Engineer"} position at ${company || "your company"}. Having reviewed the job description, I am highly inspired by your mission and confident that my background in full-stack engineering and AI tools perfectly aligns with the requirements of this role.\n\nFrom my Profile Vault, I have successfully applied React and FastAPI to optimize asynchronous toolchains, similar to what you are building. I bring strong skills in TypeScript, Python, and PyTorch, which would allow me to contribute to your team from day one. I am particularly excited about how my hands-on experience matches the technical stack required for this vacancy.\n\nThank you for your time and consideration. I look forward to the possibility of discussing how my experience can support your goals.\n\nSincerely,\n${profile.first_name} ${profile.last_name}`;
+          } else if (lowerMsg.includes("interview") || lowerMsg.includes("面试") || lowerMsg.includes("问题")) {
+            fallbackContent = `💬 **【模拟面试】为您筛选的常见技术与行为面试问题：**\n\n1. **Q1**: 您提到开发过 *ApplyPilot AI*。能具体讲讲在 Chrome Extension 隔离沙箱环境中，您是如何解决表单自动填充的原型劫持问题的？\n   *💡 回答技巧：强调您对 DOM setter 劫持的原生解决方案，以及如何包装为 try-catch 失败回退逻辑。*\n\n2. **Q2**: 在 ${company || "您的目标公司"}，我们对大语言模型的响应速度和数据隐私非常看重。您会如何优化大语言模型 Agent 在云端的并发表现？\n   *💡 回答技巧：可以提您在 FastAPI 后端里使用异步函数 (\`async/await\`)，并且不在数据库中明文保存用户 API Key，完全走内存请求头的隐私做法。*`;
+          } else if (lowerMsg.includes("match") || lowerMsg.includes("匹配") || lowerMsg.includes("优势") || lowerMsg.includes("分析")) {
+            fallbackContent = `💡 **【岗位匹配度深度剖析】**\n\n* **岗位名称**：${roleTitle || "未知岗位"}\n* **目标公司**：${company || "未知公司"}\n\n**🔥 您的三大竞争优势**：\n1. **技术栈高度重合**：该岗位所需的 React, TypeScript 以及 FastAPI 正是您在 *ApplyPilot AI* 项目中深度打磨的技能。\n2. **AI 原生开发经验**：您具备出色的 Gemini AI 接入与 Agent 研发经验，这正是当前众多科技公司最紧缺的技术能力。\n3. **跨领域工作背景**：您在工行（ICBC）拥有卓越的管理经验，具备极强的合规思维和跨部门沟通技巧，能适应快节奏的团队协作。\n\n**⚠️ 潜在弱项与补强建议**：\n- *建议*：在简历和面试中可以进一步强调您对 CI/CD 流水线（如 GitLab MCP）或云原生部署（如 Cloud Run）的理解，展示您的全栈 DevOps 实力。`;
+          } else {
+            fallbackContent = `👋 **关于「${msg}」的解答**：\n\n我是您的 ApplyPilot AI 求职助手。我已经为您同步加载了个人背景数据与 ${company || "当前"} 职位的相关上下文：\n\n* **您想了解的是**：有关“${msg}”的求职指导。\n* **建议**：建议您可以点击下方的快捷提示按钮：\n  1. 点击【✍️ 生成求职信】一键起草 tailored Cover Letter。\n  2. 点击【💡 分析匹配优势】为您评估简历与职位的强弱项匹配。\n  3. 点击【💬 模拟面试提问】进入模拟面试挑战！\n\n有什么具体问题，随时在下方提问，我会结合您的 Columbia University 学历与开发背景为您量身解答！`;
+          }
+        } else {
+          // English Fallbacks
+          if (lowerMsg.includes("cover letter") || lowerMsg.includes("letter") || lowerMsg.includes("write")) {
+            fallbackContent = `✍️ **【Tailored Cover Letter】**\n\nDear Hiring Manager,\n\nI am writing to express my enthusiastic interest in the ${roleTitle || "Software Engineer"} position at ${company || "your company"}. Having reviewed the job description, I am highly inspired by your mission and confident that my background in full-stack engineering and AI tools perfectly aligns with the requirements of this role.\n\nFrom my Profile Vault, I have successfully applied React and FastAPI to optimize asynchronous toolchains, similar to what you are building. I bring strong skills in TypeScript, Python, and PyTorch, which would allow me to contribute to your team from day one. I am particularly excited about how my hands-on experience matches the technical stack required for this vacancy.\n\nThank you for your time and consideration. I look forward to the possibility of discussing how my experience can support your goals.\n\nSincerely,\n${profile.first_name} ${profile.last_name}`;
+          } else if (lowerMsg.includes("interview") || lowerMsg.includes("question") || lowerMsg.includes("prep")) {
+            fallbackContent = `💬 **【Mock Interview】Common Technical & Behavioral Questions for this role:**\n\n1. **Q1**: You mentioned building *ApplyPilot AI*. Can you explain how you bypassed Chrome Extension isolated world prototype setters to achieve 100% autofill success?\n   *💡 Prep Tip: Highlight your custom try-catch fallback architecture and React synthetic event trigger simulation.*\n\n2. **Q2**: At ${company || "our company"}, latency and privacy are highly valued. How do you optimize LLM agent calls on your cloud API backend?\n   *💡 Prep Tip: Emphasize your async/await endpoint designs in FastAPI and the stateless header passing (X-Gemini-API-Key) for supreme security.*`;
+          } else if (lowerMsg.includes("match") || lowerMsg.includes("fit") || lowerMsg.includes("analyze") || lowerMsg.includes("strength")) {
+            fallbackContent = `💡 **【Job Alignment Profile Analysis】**\n\n* **Role**: ${roleTitle || "Software Engineer"}\n* **Company**: ${company || "your company"}\n\n**🔥 Your Top 3 Strengths**:\n1. **High Stack Alignment**: The required React, TypeScript, and FastAPI skills are exactly the core foundation of your *ApplyPilot AI* development.\n2. **GenAI Practicality**: You have real-world experience building autonomous agents with Google Gemini, which is highly sought after.\n3. **Interdisciplinary Value**: Your operations management tenure at ICBC proves strong leadership, compliance mindset, and corporate collaboration.\n\n**⚠️ Growth Areas & Recommendations**:\n- *Tip*: Emphasize your understanding of continuous integrations (e.g. GitLab MCP) or serverless cloud engines (e.g. Cloud Run) to highlight strong DevOps capabilities.`;
+          } else {
+            fallbackContent = `👋 **Response regarding "${msg}"**:\n\nHello! I am ApplyPilot AI, your job application copilot. I have mapped your background profile to the active job description for ${company || "this position"}.\n\n* **You asked about**: "${msg}"\n* **Suggestions**: Try clicking one of our high-value quick actions below to:\n  1. Draft a fully tailored **Cover Letter** matching this role.\n  2. **Analyze Matching Strengths** to see your resume compatibility score.\n  3. **Run Mock Interview** to prep with AI-selected questions.\n\nFeel free to ask any specific career or application questions!`;
+          }
+        }
+
+        setChatHistory(prev => [...prev, {
           role: 'model' as const,
-          content: `✍️ **求职信 (Cover Letter) 已为您定制生成**：\n\nDear Hiring Manager,\n\nI am writing to express my enthusiastic interest in the ${roleTitle || "Software Engineer"} position at ${company || "your company"}. Having reviewed the job description, I am highly inspired by your mission and confident that my background in full-stack engineering and AI tools perfectly aligns with the requirements of this role.\n\nFrom my Profile Vault, I have successfully applied React and FastAPI to optimize asynchronous toolchains, similar to what you are building. I bring strong skills in TypeScript, Python, and PyTorch, which would allow me to contribute to your team from day one. I am particularly excited about how my hands-on experience matches the technical stack required for this vacancy.\n\nThank you for your time and consideration. I look forward to the possibility of discussing how my experience can support your goals.\n\nSincerely,\n${profile.first_name} ${profile.last_name}`
+          content: fallbackContent
         }]);
       }, 1000);
     } finally {
@@ -856,14 +1031,38 @@ export default function Sidebar() {
           <div className="logo-icon">A</div>
           <div>
             <h1 className="logo-text">ApplyPilot</h1>
-            <p style={{ fontSize: '0.65rem', color: 'var(--text-muted)' }}>AI 求职助推器</p>
+            <p style={{ fontSize: '0.65rem', color: 'var(--text-muted)' }}>{lang === 'zh' ? 'AI 求职助推器' : 'AI Job Application Copilot'}</p>
           </div>
           <span className="logo-badge">Beta</span>
         </div>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+          {/* Language Toggle Button */}
+          <button 
+            onClick={() => changeLanguage(lang === 'zh' ? 'en' : 'zh')}
+            style={{
+              background: 'rgba(255, 255, 255, 0.05)',
+              border: '1px solid var(--border-glass)',
+              borderRadius: 'var(--radius-sm)',
+              color: '#d8b4fe',
+              fontSize: '0.65rem',
+              padding: '4px 6px',
+              cursor: 'pointer',
+              fontWeight: 700,
+              display: 'flex',
+              alignItems: 'center',
+              gap: '3px',
+              transition: 'all 0.2s ease',
+              textTransform: 'uppercase',
+              letterSpacing: '0.5px'
+            }}
+            title={lang === 'zh' ? 'Switch to English' : '切换至中文'}
+          >
+            🌐 {lang === 'zh' ? 'EN' : '中文'}
+          </button>
+          
           <span className={pageScanned ? "pulse-indicator" : "pulse-indicator pulse-yellow"}></span>
           <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>
-            {pageScanned ? "已锁定表单" : "等待页面"}
+            {lang === 'zh' ? (pageScanned ? "已锁定表单" : "等待页面") : (pageScanned ? "Form Locked" : "Waiting")}
           </span>
         </div>
       </header>
@@ -874,27 +1073,28 @@ export default function Sidebar() {
           className={`tab-btn ${activeTab === 'apply' ? 'active' : ''}`}
           onClick={() => setActiveTab('apply')}
         >
-          <Sparkles size={16} /> 投递匹配
+          <Sparkles size={16} /> {cur.applyTab}
         </button>
         <button 
           className={`tab-btn ${activeTab === 'copy' ? 'active' : ''}`}
           onClick={() => setActiveTab('copy')}
         >
-          <FileText size={16} /> 快速复制
+          <FileText size={16} /> {cur.copyTab}
         </button>
         <button 
           className={`tab-btn ${activeTab === 'profile' ? 'active' : ''}`}
           onClick={() => setActiveTab('profile')}
         >
-          <User size={16} /> 档案库
+          <User size={16} /> {cur.profileTab}
         </button>
         <button 
           className={`tab-btn ${activeTab === 'chat' ? 'active' : ''}`}
           onClick={() => setActiveTab('chat')}
         >
-          <MessageSquare size={16} /> 智能对话
+          <MessageSquare size={16} /> {cur.chatTab}
         </button>
       </nav>
+
 
       {/* Main Container */}
       <main className="tab-content">
@@ -1507,7 +1707,7 @@ export default function Sidebar() {
         {activeTab === 'chat' && (
           <div className="glass-card" style={{ display: 'flex', flexDirection: 'column', height: 'calc(100vh - 160px)', padding: '16px', boxSizing: 'border-box' }}>
             <h3 className="card-title" style={{ borderBottom: '1px solid rgba(255, 255, 255, 0.05)', paddingBottom: '10px', marginBottom: '10px' }}>
-              <MessageSquare size={16} style={{ color: 'var(--primary)' }} /> ApplyPilot AI 智能问答
+              <MessageSquare size={16} style={{ color: 'var(--primary)' }} /> {cur.chatTitle}
             </h3>
             
             {/* Message List */}
@@ -1537,12 +1737,12 @@ export default function Sidebar() {
                   <div style={{ whiteSpace: 'pre-wrap' }}>{msg.content}</div>
                   
                   {/* If the bot responded with a cover letter or contains standard content, show copy and download buttons */}
-                  {msg.role === 'model' && (msg.content.includes("Dear") || msg.content.includes("Sincerely") || msg.content.includes("求职信") || msg.content.length > 200) && (
+                  {msg.role === 'model' && (msg.content.includes("Dear") || msg.content.includes("Sincerely") || msg.content.includes("求职信") || msg.content.includes("Cover Letter") || msg.content.length > 200) && (
                     <div style={{ display: 'flex', gap: '8px', marginTop: '10px', borderTop: '1px solid rgba(255,255,255,0.05)', paddingTop: '8px' }}>
                       <button 
                         onClick={() => {
                           navigator.clipboard.writeText(msg.content);
-                          alert("📋 已成功复制求职信全文至剪贴板！");
+                          alert(cur.copiedAlert);
                         }}
                         style={{
                           background: 'rgba(255, 255, 255, 0.05)',
@@ -1557,12 +1757,12 @@ export default function Sidebar() {
                           gap: '4px'
                         }}
                       >
-                        复制全文
+                        {cur.copyFull}
                       </button>
                       <button 
                         onClick={() => {
                           downloadTextFile(`${company || "Job"}_Cover_Letter.txt`, msg.content);
-                          alert("📥 已成功下载求职信文本文件！");
+                          alert(cur.downloadAlert);
                         }}
                         style={{
                           background: 'rgba(168, 85, 247, 0.15)',
@@ -1577,7 +1777,7 @@ export default function Sidebar() {
                           gap: '4px'
                         }}
                       >
-                        下载文本 (.txt)
+                        {cur.downloadText}
                       </button>
                     </div>
                   )}
@@ -1598,7 +1798,7 @@ export default function Sidebar() {
                   gap: '8px'
                 }}>
                   <RefreshCw size={14} className="spin" />
-                  <span>AI 正在思考中，请稍候...</span>
+                  <span>{cur.chatLoading}</span>
                 </div>
               )}
             </div>
@@ -1606,7 +1806,7 @@ export default function Sidebar() {
             {/* Quick Action Suggestion Chips */}
             <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap', marginBottom: '10px' }}>
               <button 
-                onClick={() => handleSendChatMessage("请为我生成一封针对当前职位的 Cover Letter")}
+                onClick={() => handleSendChatMessage(lang === 'zh' ? "请为我生成一封针对当前职位的 Cover Letter" : "Draft a tailored Cover Letter for this position")}
                 disabled={chatLoading}
                 style={{
                   background: 'rgba(168, 85, 247, 0.08)',
@@ -1618,10 +1818,10 @@ export default function Sidebar() {
                   cursor: 'pointer'
                 }}
               >
-                ✍️ 生成求职信
+                {cur.chipCoverLetter}
               </button>
               <button 
-                onClick={() => handleSendChatMessage("结合我的简历，分析我申请该岗位的竞争优势和匹配度")}
+                onClick={() => handleSendChatMessage(lang === 'zh' ? "结合我的简历，分析我申请该岗位的竞争优势和匹配度" : "Analyze my matching strengths and compatibility for this job")}
                 disabled={chatLoading}
                 style={{
                   background: 'rgba(255, 255, 255, 0.05)',
@@ -1633,10 +1833,10 @@ export default function Sidebar() {
                   cursor: 'pointer'
                 }}
               >
-                💡 分析匹配优势
+                {cur.chipAnalyze}
               </button>
               <button 
-                onClick={() => handleSendChatMessage("请基于当前职位描述，向我提问一个常见的面试问题，并指导我如何回答")}
+                onClick={() => handleSendChatMessage(lang === 'zh' ? "请基于当前职位描述，向我提问一个常见的面试问题，并指导我如何回答" : "Ask me a common interview question for this role and guide my answer")}
                 disabled={chatLoading}
                 style={{
                   background: 'rgba(255, 255, 255, 0.05)',
@@ -1648,7 +1848,7 @@ export default function Sidebar() {
                   cursor: 'pointer'
                 }}
               >
-                💬 模拟面试提问
+                {cur.chipInterview}
               </button>
             </div>
 
@@ -1659,7 +1859,7 @@ export default function Sidebar() {
                 value={chatInput}
                 onChange={e => setChatInput(e.target.value)}
                 onKeyDown={e => { if (e.key === 'Enter') handleSendChatMessage(); }}
-                placeholder={pageScanned ? "向 AI 提问或要求定制求职信..." : "请先扫描网页表单以开启完整对话..."}
+                placeholder={pageScanned ? cur.chatPlaceholderActive : cur.chatPlaceholderInactive}
                 disabled={chatLoading}
                 className="input-glass"
                 style={{ flex: 1, fontSize: '0.85rem' }}
@@ -1670,11 +1870,12 @@ export default function Sidebar() {
                 className="btn-primary"
                 style={{ padding: '0 16px', width: 'auto', flexShrink: 0 }}
               >
-                发送
+                {cur.chatSend}
               </button>
             </div>
           </div>
         )}
+
 
       </main>
     </div>
