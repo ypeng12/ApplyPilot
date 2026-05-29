@@ -63,3 +63,24 @@ class ProfileVault(BaseModel):
     gemini_api_key: Optional[str] = Field(default="", description="Optional client-provided Gemini API Key override")
     backend_url: Optional[str] = Field(default="http://localhost:8000", description="Optional client-configured backend API URL")
 
+class ResumeParseResult(BaseModel):
+    first_name: str = Field(..., description="First Name")
+    last_name: str = Field(..., description="Last Name")
+    email: EmailStr = Field(..., description="Email address")
+    phone: str = Field(..., description="Phone number")
+    location: str = Field(..., description="City, State, Country")
+    linkedin: Optional[str] = Field(None, description="LinkedIn profile URL")
+    github: Optional[str] = Field(None, description="GitHub profile URL")
+    portfolio: Optional[str] = Field(None, description="Portfolio website URL")
+    
+    education: List[Education] = Field(default=[], description="List of educational history")
+    experience: List[WorkExperience] = Field(default=[], description="List of professional experience")
+    skills: List[str] = Field(default=[], description="General skills or keywords")
+    
+    # EEO / Demographic Fields
+    gender: Optional[str] = Field("Decline to Self Identify", description="Gender demographic option")
+    race: Optional[str] = Field("Decline to Self Identify", description="Race or ethnicity demographic option")
+    veteran_status: Optional[str] = Field("I am not a protected veteran", description="Veteran status demographic option")
+    pronouns: Optional[str] = Field("He/him", description="Preferred pronouns")
+
+

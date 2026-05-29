@@ -3,7 +3,7 @@ import json
 from google import genai
 from google.genai import types
 from typing import List
-from ..models.profile import ProfileVault
+from ..models.profile import ProfileVault, ResumeParseResult
 from ..models.job import JobDetails, FormField, FieldMapping, FieldMappingResponse
 
 class GeminiMapperAgent:
@@ -143,7 +143,7 @@ class GeminiMapperAgent:
         
         config = types.GenerateContentConfig(
             response_mime_type="application/json",
-            response_schema=ProfileVault,
+            response_schema=ResumeParseResult,
             temperature=0.1
         )
         
@@ -153,4 +153,29 @@ class GeminiMapperAgent:
             config=config
         )
         
-        return ProfileVault.model_validate_json(response.text)
+        parsed = ResumeParseResult.model_validate_json(response.text)
+        return ProfileVault(
+            first_name=parsed.first_name,
+            last_name=parsed.last_name,
+            email=parsed.email,
+            phone=parsed.phone,
+            location=parsed.location,
+            linkedin=parsed.linkedin,
+            github=parsed.github,
+            portfolio=parsed.portfolio,
+            education=parsed.education,
+            experience=parsed.experience,
+            projects=[],
+            skills=parsed.skills,
+            requires_sponsorship=False,
+            authorized_to_work=True,
+            custom_qa=[],
+            gender=parsed.gender,
+            race=parsed.race,
+            veteran_status=parsed.veteran_status,
+            pronouns=parsed.pronouns,
+            custom_fields={},
+            gemini_api_key="",
+            backend_url="http://localhost:8000"
+        )
+
