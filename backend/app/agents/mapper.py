@@ -176,6 +176,7 @@ class GeminiMapperAgent:
             pronouns=parsed.pronouns,
             custom_fields={},
             gemini_api_key="",
-            backend_url="http://localhost:8000"
+            backend_url="http://localhost:8000",
+            cover_letter_sample=""
         )
 

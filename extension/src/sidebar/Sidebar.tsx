@@ -16,6 +16,7 @@ import {
   FileText,
   MessageSquare
 } from 'lucide-react';
+import { jsPDF } from 'jspdf';
 
 // Interfaces for UI state
 interface FormField {
@@ -105,9 +106,9 @@ export default function Sidebar() {
       chipAnalyze: "💡 分析匹配优势",
       chipInterview: "💬 模拟面试提问",
       copyFull: "复制全文",
-      downloadText: "下载文本 (.txt)",
+      downloadText: "下载 PDF 求职信",
       copiedAlert: "📋 已成功复制求职信全文至剪贴板！",
-      downloadAlert: "📥 已成功下载求职信文本文件！",
+      downloadAlert: "📥 已成功导出并下载 PDF 求职信！",
       apiSettings: "🔑 API 与连接设置 (Web Store 独立发布支持)",
       apiSettingsSub: "支持自主配置 API 与后端。如需发布或在线使用，可在此配置您的密钥或在线服务器地址。",
       apiKeyLabel: "Gemini API Key (可选，留空则使用后端默认配置)",
@@ -166,9 +167,9 @@ export default function Sidebar() {
       chipAnalyze: "💡 Analyze Matching Strengths",
       chipInterview: "💬 Run Mock Interview",
       copyFull: "Copy Full text",
-      downloadText: "Download (.txt)",
+      downloadText: "Download PDF",
       copiedAlert: "📋 Copied text successfully!",
-      downloadAlert: "📥 Downloaded text file successfully!",
+      downloadAlert: "📥 Downloaded PDF Cover Letter successfully!",
       apiSettings: "🔑 API & Connection Settings",
       apiSettingsSub: "Configure your own Gemini API Key or Cloud API Server to run completely independent.",
       apiKeyLabel: "Gemini API Key (Optional, defaults to backend config)",
@@ -273,6 +274,53 @@ export default function Sidebar() {
     document.body.appendChild(element);
     element.click();
     document.body.removeChild(element);
+  };
+
+  // PDF file downloader helper using jsPDF
+  const downloadPDFFile = (filename: string, text: string) => {
+    // 1. Clean up markdown symbols (like bold asterisks or standard markdown headers)
+    // for a highly professional business look.
+    let cleanText = text
+      .replace(/\*\*(.*?)\*\*/g, '$1') // Strip bold stars
+      .replace(/\*(.*?)\*/g, '$1')     // Strip italic stars
+      .replace(/#{1,6}\s*(.*)/g, '$1'); // Strip header marks
+
+    // 2. Initialize jsPDF
+    const doc = new jsPDF({
+      orientation: 'portrait',
+      unit: 'mm',
+      format: 'a4'
+    });
+
+    // 3. Set professional business margins (20mm)
+    const margin = 20;
+    const pageWidth = doc.internal.pageSize.getWidth();
+    const maxLineWidth = pageWidth - (margin * 2);
+
+    // 4. Split text into lines that fit the page width
+    const lines = doc.splitTextToSize(cleanText, maxLineWidth);
+
+    let y = margin;
+    const pageHeight = doc.internal.pageSize.getHeight();
+    const lineHeight = 6.5; // mm standard vertical space between text lines
+
+    // 5. Set font family, size and color
+    doc.setFont("Helvetica", "normal");
+    doc.setFontSize(11);
+    doc.setTextColor(31, 41, 55); // Slate gray #1f2937 for soft professional look
+
+    lines.forEach((line: string) => {
+      // Check if page overflow
+      if (y + lineHeight > pageHeight - margin) {
+        doc.addPage();
+        y = margin;
+      }
+      doc.text(line, margin, y);
+      y += lineHeight;
+    });
+
+    // 6. Save as PDF
+    doc.save(filename);
   };
 
   const handleSendChatMessage = async (textToSend?: string) => {
@@ -459,6 +507,8 @@ Feel free to ask any specific questions, and let's chat!`;
     pronouns: 'He/him',
     gemini_api_key: '',
     backend_url: 'https://applypilot-backend.onrender.com',
+    cover_letter_sample: 'Dear Hiring Manager,\n\nI am writing to express my enthusiastic interest in the Software Engineer position. I am highly inspired by your mission and confident that my background in full-stack engineering and AI tools aligns with the requirements of this role.\n\nAt my previous experience, I successfully applied React, TypeScript, and FastAPI to build intelligent tools and optimize backend services. I bring strong programming skills and a self-driven mindset, which allows me to contribute to your team from day one.\n\nThank you for your time and consideration. I look forward to the possibility of discussing how my experience can support your goals.\n\nSincerely,\n[Your Name]',
+
 
 
     custom_fields: {} as Record<string, string>,
@@ -1765,6 +1815,21 @@ Feel free to ask any specific questions, and let's chat!`;
                 />
               </div>
 
+              <div className="form-group">
+                <label className="form-label">
+                  {lang === 'zh' ? '自定义求职信样本 (Cover Letter Sample)' : 'Custom Cover Letter Sample'}
+                </label>
+                <textarea 
+                  value={profile.cover_letter_sample || ''} 
+                  onChange={e => saveProfile({ ...profile, cover_letter_sample: e.target.value })}
+                  className="input-glass"
+                  rows={6}
+                  placeholder={lang === 'zh' 
+                    ? "输入您的求职信模版/样本。AI将以此为模版学习您的语气和写作风格，并根据目标公司及岗位动态修改和润色..." 
+                    : "Enter your cover letter sample. The AI will learn your writing style, tone, and achievements from this template and tailor it to the target company..."}
+                />
+              </div>
+
               <button 
                 onClick={() => {
                   saveProfile(profile);
@@ -1813,7 +1878,7 @@ Feel free to ask any specific questions, and let's chat!`;
                   <div style={{ whiteSpace: 'pre-wrap' }}>{msg.content}</div>
                   
                   {/* If the bot responded with a cover letter or contains standard content, show copy and download buttons */}
-                  {msg.role === 'model' && (msg.content.includes("Dear") || msg.content.includes("Sincerely") || msg.content.includes("求职信") || msg.content.includes("Cover Letter") || msg.content.length > 200) && (
+                  {idx !== 0 && msg.role === 'model' && (msg.content.includes("Dear") || msg.content.includes("Sincerely") || msg.content.includes("尊敬的") || msg.content.includes("此致敬礼")) && (
                     <div style={{ display: 'flex', gap: '8px', marginTop: '10px', borderTop: '1px solid rgba(255,255,255,0.05)', paddingTop: '8px' }}>
                       <button 
                         onClick={() => {
@@ -1837,7 +1902,7 @@ Feel free to ask any specific questions, and let's chat!`;
                       </button>
                       <button 
                         onClick={() => {
-                          downloadTextFile(`${company || "Job"}_Cover_Letter.txt`, msg.content);
+                          downloadPDFFile(`${company || "Job"}_Cover_Letter.pdf`, msg.content);
                           alert(cur.downloadAlert);
                         }}
                         style={{

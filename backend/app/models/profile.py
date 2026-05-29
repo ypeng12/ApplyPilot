@@ -1,5 +1,5 @@
 from pydantic import BaseModel, Field, EmailStr
-from typing import List, Optional, Dict
+from typing import List, Optional, Dict, Union
 
 class Education(BaseModel):
     school: str = Field(..., description="University or school name")
@@ -20,7 +20,7 @@ class WorkExperience(BaseModel):
 class Project(BaseModel):
     title: str = Field(..., description="Project title")
     description: str = Field(..., description="High-level description of what you built")
-    tech_stack: List[str] = Field(default=[], description="Languages and technologies used")
+    tech_stack: Union[List[str], str] = Field(default=[], description="Languages and technologies used")
     bullet_points: List[str] = Field(default=[], description="Key achievements or features of the project")
     link: Optional[str] = Field(None, description="GitHub repository or live demo link")
 
@@ -41,7 +41,7 @@ class ProfileVault(BaseModel):
     education: List[Education] = Field(default=[], description="List of educational history")
     experience: List[WorkExperience] = Field(default=[], description="List of professional experience")
     projects: List[Project] = Field(default=[], description="List of notable projects")
-    skills: List[str] = Field(default=[], description="General skills or keywords")
+    skills: Union[List[str], str] = Field(default=[], description="General skills or keywords")
     
     # Sponsorship & Legal
     requires_sponsorship: bool = Field(False, description="Requires visa sponsorship or work visa")
@@ -62,6 +62,8 @@ class ProfileVault(BaseModel):
     # Client settings
     gemini_api_key: Optional[str] = Field(default="", description="Optional client-provided Gemini API Key override")
     backend_url: Optional[str] = Field(default="http://localhost:8000", description="Optional client-configured backend API URL")
+    cover_letter_sample: Optional[str] = Field(default="", description="Optional client-provided sample cover letter to tailor from")
+
 
 class ResumeParseResult(BaseModel):
     first_name: str = Field(..., description="First Name")
