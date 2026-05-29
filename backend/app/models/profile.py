@@ -58,3 +58,8 @@ class ProfileVault(BaseModel):
     
     # Custom Fields from manual review fill history
     custom_fields: Optional[Dict[str, str]] = Field(default={}, description="Custom key-value pairs of other form fields")
+    
+    # Client settings
+    gemini_api_key: Optional[str] = Field(default="", description="Optional client-provided Gemini API Key override")
+    backend_url: Optional[str] = Field(default="http://localhost:8000", description="Optional client-configured backend API URL")
+

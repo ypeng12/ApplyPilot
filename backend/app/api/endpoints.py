@@ -1,4 +1,4 @@
-from fastapi import APIRouter, HTTPException, Depends, UploadFile, File
+from fastapi import APIRouter, HTTPException, Depends, UploadFile, File, Header
 from pydantic import BaseModel
 from typing import List, Optional
 import requests
@@ -295,9 +295,9 @@ def fill_form_endpoint(payload: FillFormRequest):
     return results
 
 @router.post("/parse-job", response_model=JobDetails)
-async def parse_job_endpoint(payload: ParseJobRequest):
+async def parse_job_endpoint(payload: ParseJobRequest, x_gemini_api_key: Optional[str] = Header(None)):
     try:
-        agent = GeminiMapperAgent()
+        agent = GeminiMapperAgent(api_key=x_gemini_api_key)
         job_details = await agent.parse_job_description(payload.raw_text)
         return job_details
     except ValueError as val_err:
@@ -306,9 +306,9 @@ async def parse_job_endpoint(payload: ParseJobRequest):
         raise HTTPException(status_code=500, detail=f"Failed to parse job description: {str(e)}")
 
 @router.post("/map-fields", response_model=List[FieldMapping])
-async def map_fields_endpoint(payload: MapFieldsRequest):
+async def map_fields_endpoint(payload: MapFieldsRequest, x_gemini_api_key: Optional[str] = Header(None)):
     try:
-        agent = GeminiMapperAgent()
+        agent = GeminiMapperAgent(api_key=x_gemini_api_key)
         mappings = await agent.map_fields(payload.profile, payload.job, payload.fields)
         return mappings
     except ValueError as val_err:
@@ -317,7 +317,7 @@ async def map_fields_endpoint(payload: MapFieldsRequest):
         raise HTTPException(status_code=500, detail=f"Failed to map form fields: {str(e)}")
 
 @router.post("/parse-resume", response_model=ProfileVault)
-async def parse_resume_endpoint(file: UploadFile = File(...)):
+async def parse_resume_endpoint(file: UploadFile = File(...), x_gemini_api_key: Optional[str] = Header(None)):
     if not file.filename.lower().endswith(('.pdf', '.txt')):
         raise HTTPException(status_code=400, detail="Only PDF and TXT resumes are supported currently.")
         
@@ -340,7 +340,7 @@ async def parse_resume_endpoint(file: UploadFile = File(...)):
         if not resume_text.strip():
             raise HTTPException(status_code=400, detail="The uploaded resume file seems to be empty or unreadable.")
             
-        agent = GeminiMapperAgent()
+        agent = GeminiMapperAgent(api_key=x_gemini_api_key)
         profile_data = await agent.parse_resume(resume_text)
         return profile_data
         
@@ -350,9 +350,9 @@ async def parse_resume_endpoint(file: UploadFile = File(...)):
         raise HTTPException(status_code=500, detail=f"Failed to parse resume: {str(e)}")
 
 @router.post("/chat")
-async def chat_endpoint(payload: ChatRequest):
+async def chat_endpoint(payload: ChatRequest, x_gemini_api_key: Optional[str] = Header(None)):
     try:
-        agent = GeminiMapperAgent()
+        agent = GeminiMapperAgent(api_key=x_gemini_api_key)
         
         # Build prompt context
         profile_json = payload.profile.model_dump_json(indent=2)

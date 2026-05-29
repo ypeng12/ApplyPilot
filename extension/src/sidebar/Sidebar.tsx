@@ -137,10 +137,14 @@ export default function Sidebar() {
     setChatHistory(updatedHistory);
 
     try {
-      const response = await fetch("http://localhost:8000/api/chat", {
+      const response = await fetch(`${profile.backend_url || "http://localhost:8000"}/api/chat`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { 
+          "Content-Type": "application/json",
+          "X-Gemini-API-Key": profile.gemini_api_key || ""
+        },
         body: JSON.stringify({
+
           message: msg,
           profile: profile,
           job: pageScanned ? {
@@ -202,6 +206,9 @@ export default function Sidebar() {
     race: 'Decline to Self Identify',
     veteran_status: 'I am not a protected veteran',
     pronouns: 'He/him',
+    gemini_api_key: '',
+    backend_url: 'http://localhost:8000',
+
     custom_fields: {} as Record<string, string>,
     projects: [
       {
@@ -264,10 +271,14 @@ export default function Sidebar() {
     formData.append("file", file);
 
     try {
-      const response = await fetch("http://localhost:8000/api/parse-resume", {
+      const response = await fetch(`${profile.backend_url || "http://localhost:8000"}/api/parse-resume`, {
         method: "POST",
+        headers: {
+          "X-Gemini-API-Key": profile.gemini_api_key || ""
+        },
         body: formData
       });
+
 
       if (!response.ok) {
         throw new Error(await response.text() || "解析失败");
@@ -651,10 +662,14 @@ export default function Sidebar() {
   const handleAIGenerateAnswers = async () => {
     setLoading(true);
     try {
-      const response = await fetch("http://localhost:8000/api/map-fields", {
+      const response = await fetch(`${profile.backend_url || "http://localhost:8000"}/api/map-fields`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { 
+          "Content-Type": "application/json",
+          "X-Gemini-API-Key": profile.gemini_api_key || ""
+        },
         body: JSON.stringify({
+
           profile,
           job: {
             company,
@@ -1274,8 +1289,50 @@ export default function Sidebar() {
             )}
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
+              
+              {/* API & Backend connection settings (Premium Web-Store Ready Glass Container) */}
+              <div style={{
+                background: 'rgba(168, 85, 247, 0.05)',
+                border: '1px solid rgba(168, 85, 247, 0.2)',
+                padding: '14px',
+                borderRadius: 'var(--radius-md)',
+                marginBottom: '10px'
+              }}>
+                <h4 style={{ fontSize: '0.8rem', fontWeight: 700, color: '#c084fc', marginBottom: '8px', display: 'flex', alignItems: 'center', gap: '5px' }}>
+                  🔑 API 与连接设置 (Web Store 独立发布支持)
+                </h4>
+                <p style={{ fontSize: '0.7rem', color: 'var(--text-muted)', marginBottom: '10px', lineHeight: 1.3 }}>
+                  支持自主配置 API 与后端。如需发布或在线使用，可在此配置您的密钥或在线服务器地址。
+                </p>
+                
+                <div className="form-group" style={{ marginBottom: '10px' }}>
+                  <label className="form-label" style={{ fontSize: '0.7rem', color: '#e9d5ff' }}>Gemini API Key (可选，留空则使用后端默认配置)</label>
+                  <input 
+                    type="password" 
+                    value={profile.gemini_api_key || ''} 
+                    onChange={e => saveProfile({ ...profile, gemini_api_key: e.target.value })}
+                    className="input-glass"
+                    placeholder="AI_zaSy..."
+                    style={{ fontSize: '0.8rem' }}
+                  />
+                </div>
+
+                <div className="form-group">
+                  <label className="form-label" style={{ fontSize: '0.7rem', color: '#e9d5ff' }}>后端 API 接口地址</label>
+                  <input 
+                    type="text" 
+                    value={profile.backend_url || 'http://localhost:8000'} 
+                    onChange={e => saveProfile({ ...profile, backend_url: e.target.value })}
+                    className="input-glass"
+                    placeholder="http://localhost:8000"
+                    style={{ fontSize: '0.8rem' }}
+                  />
+                </div>
+              </div>
+
               <div className="form-group">
                 <label className="form-label">First Name</label>
+
                 <input 
                   type="text" 
                   value={profile.first_name} 
