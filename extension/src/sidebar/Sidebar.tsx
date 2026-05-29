@@ -373,7 +373,17 @@ export default function Sidebar() {
         
         if (lang === 'zh') {
           if (lowerMsg.includes("cover letter") || lowerMsg.includes("求职信") || lowerMsg.includes("信")) {
-            fallbackContent = `Dear Hiring Manager,
+            if (profile.cover_letter_sample && profile.cover_letter_sample.length > 50) {
+              fallbackContent = profile.cover_letter_sample
+                .replace(/\[Company Name\]/gi, company || "your company")
+                .replace(/\[Company\]/gi, company || "your company")
+                .replace(/\[Job Title\]/gi, roleTitle || "Software Engineer")
+                .replace(/\[Role\]/gi, roleTitle || "Software Engineer")
+                .replace(/\[Your Name\]/gi, `${profile.first_name} ${profile.last_name}`)
+                .replace(/\[Date\]/gi, "May 2026")
+                .replace(/\[Name\]/gi, `${profile.first_name} ${profile.last_name}`);
+            } else {
+              fallbackContent = `Dear Hiring Manager,
 
 I am writing to express my enthusiastic interest in the ${roleTitle || "Software Engineer"} position at ${company || "your company"}. Having reviewed the job description, I am highly inspired by your mission and confident that my background in full-stack engineering and AI tools perfectly aligns with the requirements of this role.
 
@@ -383,6 +393,7 @@ Thank you for your time and consideration. I look forward to the possibility of 
 
 Sincerely,
 ${profile.first_name} ${profile.last_name}`;
+            }
           } else if (lowerMsg.includes("interview") || lowerMsg.includes("面试") || lowerMsg.includes("问题")) {
             fallbackContent = `好呀！面对 ${company || "这家公司"} 的 ${roleTitle || "这个岗位"}，我们可以来模拟一些最核心的面试提问。
 
@@ -422,7 +433,17 @@ ${profile.first_name} ${profile.last_name}`;
         } else {
           // English Fallbacks
           if (lowerMsg.includes("cover letter") || lowerMsg.includes("letter") || lowerMsg.includes("write")) {
-            fallbackContent = `Dear Hiring Manager,
+            if (profile.cover_letter_sample && profile.cover_letter_sample.length > 50) {
+              fallbackContent = profile.cover_letter_sample
+                .replace(/\[Company Name\]/gi, company || "your company")
+                .replace(/\[Company\]/gi, company || "your company")
+                .replace(/\[Job Title\]/gi, roleTitle || "Software Engineer")
+                .replace(/\[Role\]/gi, roleTitle || "Software Engineer")
+                .replace(/\[Your Name\]/gi, `${profile.first_name} ${profile.last_name}`)
+                .replace(/\[Date\]/gi, "May 2026")
+                .replace(/\[Name\]/gi, `${profile.first_name} ${profile.last_name}`);
+            } else {
+              fallbackContent = `Dear Hiring Manager,
 
 I am writing to express my enthusiastic interest in the ${roleTitle || "Software Engineer"} position at ${company || "your company"}. Having reviewed the job description, I am highly inspired by your mission and confident that my background in full-stack engineering and AI tools perfectly aligns with the requirements of this role.
 
@@ -432,6 +453,7 @@ Thank you for your time and consideration. I look forward to the possibility of 
 
 Sincerely,
 ${profile.first_name} ${profile.last_name}`;
+            }
           } else if (lowerMsg.includes("interview") || lowerMsg.includes("question") || lowerMsg.includes("prep")) {
             fallbackContent = `Awesome! Let's mock some core interview questions for the ${roleTitle || "Software Engineer"} role at ${company || "your target company"}.
 
