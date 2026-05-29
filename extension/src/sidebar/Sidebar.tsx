@@ -325,24 +325,100 @@ export default function Sidebar() {
         
         if (lang === 'zh') {
           if (lowerMsg.includes("cover letter") || lowerMsg.includes("求职信") || lowerMsg.includes("信")) {
-            fallbackContent = `✍️ **【求职信定制生成 (Cover Letter)】**\n\nDear Hiring Manager,\n\nI am writing to express my enthusiastic interest in the ${roleTitle || "Software Engineer"} position at ${company || "your company"}. Having reviewed the job description, I am highly inspired by your mission and confident that my background in full-stack engineering and AI tools perfectly aligns with the requirements of this role.\n\nFrom my Profile Vault, I have successfully applied React and FastAPI to optimize asynchronous toolchains, similar to what you are building. I bring strong skills in TypeScript, Python, and PyTorch, which would allow me to contribute to your team from day one. I am particularly excited about how my hands-on experience matches the technical stack required for this vacancy.\n\nThank you for your time and consideration. I look forward to the possibility of discussing how my experience can support your goals.\n\nSincerely,\n${profile.first_name} ${profile.last_name}`;
+            fallbackContent = `Dear Hiring Manager,
+
+I am writing to express my enthusiastic interest in the ${roleTitle || "Software Engineer"} position at ${company || "your company"}. Having reviewed the job description, I am highly inspired by your mission and confident that my background in full-stack engineering and AI tools perfectly aligns with the requirements of this role.
+
+From my Profile Vault, I have successfully applied React and FastAPI to optimize asynchronous toolchains, similar to what you are building. I bring strong skills in TypeScript, Python, and PyTorch, which would allow me to contribute to your team from day one. I am particularly excited about how my hands-on experience matches the technical stack required for this vacancy.
+
+Thank you for your time and consideration. I look forward to the possibility of discussing how my experience can support your goals.
+
+Sincerely,
+${profile.first_name} ${profile.last_name}`;
           } else if (lowerMsg.includes("interview") || lowerMsg.includes("面试") || lowerMsg.includes("问题")) {
-            fallbackContent = `💬 **【模拟面试】为您筛选的常见技术与行为面试问题：**\n\n1. **Q1**: 您提到开发过 *ApplyPilot AI*。能具体讲讲在 Chrome Extension 隔离沙箱环境中，您是如何解决表单自动填充的原型劫持问题的？\n   *💡 回答技巧：强调您对 DOM setter 劫持的原生解决方案，以及如何包装为 try-catch 失败回退逻辑。*\n\n2. **Q2**: 在 ${company || "您的目标公司"}，我们对大语言模型的响应速度和数据隐私非常看重。您会如何优化大语言模型 Agent 在云端的并发表现？\n   *💡 回答技巧：可以提您在 FastAPI 后端里使用异步函数 (\`async/await\`)，并且不在数据库中明文保存用户 API Key，完全走内存请求头的隐私做法。*`;
+            fallbackContent = `好呀！面对 ${company || "这家公司"} 的 ${roleTitle || "这个岗位"}，我们可以来模拟一些最核心的面试提问。
+
+首先，面试官非常可能会问到你的主打项目：
+“我看到你在简历中开发过 ApplyPilot AI。你能具体讲讲在 Chrome 插件的隔离域沙箱（Isolated World）里，你是如何解决表单自动填充的原型劫持问题的？”
+💡 *回答提示：你可以着重聊一聊我们为 Isolated world 专门设计的 try-catch 失败回退机制以及模拟 React 合成事件的触发，这能展现你非常扎实的前端底层功底！*
+
+其次，针对 ${company || "这家公司"} 关注的性能，面试官可能会问：
+“我们的服务对大模型的响应延迟和数据隐私很看重，你在后端是怎么优化的？”
+💡 *回答提示：这可以讲讲你在 FastAPI 后端采用的异步协程处理，以及通过安全请求头动态传递 API Key 的无状态设计，既安全又保证了高性能！*
+
+你觉得这两个问题怎么样？我们可以针对其中一个来练习，或者你直接告诉我你想模拟什么类型的提问！`;
           } else if (lowerMsg.includes("match") || lowerMsg.includes("匹配") || lowerMsg.includes("优势") || lowerMsg.includes("分析")) {
-            fallbackContent = `💡 **【岗位匹配度深度剖析】**\n\n* **岗位名称**：${roleTitle || "未知岗位"}\n* **目标公司**：${company || "未知公司"}\n\n**🔥 您的三大竞争优势**：\n1. **技术栈高度重合**：该岗位所需的 React, TypeScript 以及 FastAPI 正是您在 *ApplyPilot AI* 项目中深度打磨的技能。\n2. **AI 原生开发经验**：您具备出色的 Gemini AI 接入与 Agent 研发经验，这正是当前众多科技公司最紧缺的技术能力。\n3. **跨领域工作背景**：您在工行（ICBC）拥有卓越的管理经验，具备极强的合规思维和跨部门沟通技巧，能适应快节奏的团队协作。\n\n**⚠️ 潜在弱项与补强建议**：\n- *建议*：在简历和面试中可以进一步强调您对 CI/CD 流水线（如 GitLab MCP）或云原生部署（如 Cloud Run）的理解，展示您的全栈 DevOps 实力。`;
+            fallbackContent = `没问题，我来帮你深度分析一下你和 ${company || "目标公司"} 的 ${roleTitle || "岗位"} 的匹配度！
+
+根据我刚才从表单里扫描到的要求，结合你个人档案保险库里的背景，你的竞争优势真的非常显著：
+
+首先是【技术栈的高度重合】。对方急需 React、TypeScript 和 Python 开发者，而这正是你在开发 ApplyPilot AI 期间运用最熟练的核心底层！
+其次是你的【大模型 Agent 实战开发经验】。你熟悉 Gemini API 结构化调用以及提示词工程，这在目前的求职市场里属于极具含金量的稀缺技能。
+最后，你在工行（ICBC）的运营管理背景，赋予了你极强的合规思维、跨团队协作能力，在软实力上非常加分！
+
+如果要说有什么可以更出彩的建议，我推荐你在简历或面试中，进一步聊聊你的云原生部署经验（比如 Cloud Run）或者自动化构建能力，这能让你在其他求职者里脱颖而出。
+
+你觉得这个评估符合你的预期吗？我们也可以重点针对你的某个项目来进行更细致的优化包装！`;
           } else {
-            fallbackContent = `👋 **关于「${msg}」的解答**：\n\n我是您的 ApplyPilot AI 求职助手。我已经为您同步加载了个人背景数据与 ${company || "当前"} 职位的相关上下文：\n\n* **您想了解的是**：有关“${msg}”的求职指导。\n* **建议**：建议您可以点击下方的快捷提示按钮：\n  1. 点击【✍️ 生成求职信】一键起草 tailored Cover Letter。\n  2. 点击【💡 分析匹配优势】为您评估简历与职位的强弱项匹配。\n  3. 点击【💬 模拟面试提问】进入模拟面试挑战！\n\n有什么具体问题，随时在下方提问，我会结合您的 Columbia University 学历与开发背景为您量身解答！`;
+            fallbackContent = `你好呀！关于你提到的“${msg}”，我是你的 ApplyPilot AI 助推器。
+
+我已经为你同步载入了你的个人经历（包括你的哥伦比亚大学 MS 以及代表作 ApplyPilot 项目），还有当前 ${company || "求职网站"} 上关于 ${roleTitle || "岗位"} 的上下文。
+
+对于你的求职指导，你可以直接通过下方的快捷按钮来让我帮你：
+1. 点击【✍️ 生成求职信】—— 让我结合你的真实 React / FastAPI 经验，一键起草针对 ${company || "这家公司"} 的高端定制 Cover Letter；
+2. 点击【💡 分析匹配优势】—— 为你深入对比岗位要求，分析你的强项与闪光点；
+3. 点击【💬 模拟面试提问】—— 让我们来一场沉浸式的真实求职面试模拟！
+
+有什么具体求职小疑问，随时打字告诉我，我们随时像朋友一样聊聊！`;
           }
         } else {
           // English Fallbacks
           if (lowerMsg.includes("cover letter") || lowerMsg.includes("letter") || lowerMsg.includes("write")) {
-            fallbackContent = `✍️ **【Tailored Cover Letter】**\n\nDear Hiring Manager,\n\nI am writing to express my enthusiastic interest in the ${roleTitle || "Software Engineer"} position at ${company || "your company"}. Having reviewed the job description, I am highly inspired by your mission and confident that my background in full-stack engineering and AI tools perfectly aligns with the requirements of this role.\n\nFrom my Profile Vault, I have successfully applied React and FastAPI to optimize asynchronous toolchains, similar to what you are building. I bring strong skills in TypeScript, Python, and PyTorch, which would allow me to contribute to your team from day one. I am particularly excited about how my hands-on experience matches the technical stack required for this vacancy.\n\nThank you for your time and consideration. I look forward to the possibility of discussing how my experience can support your goals.\n\nSincerely,\n${profile.first_name} ${profile.last_name}`;
+            fallbackContent = `Dear Hiring Manager,
+
+I am writing to express my enthusiastic interest in the ${roleTitle || "Software Engineer"} position at ${company || "your company"}. Having reviewed the job description, I am highly inspired by your mission and confident that my background in full-stack engineering and AI tools perfectly aligns with the requirements of this role.
+
+From my Profile Vault, I have successfully applied React and FastAPI to optimize asynchronous toolchains, similar to what you are building. I bring strong skills in TypeScript, Python, and PyTorch, which would allow me to contribute to your team from day one. I am particularly excited about how my hands-on experience matches the technical stack required for this vacancy.
+
+Thank you for your time and consideration. I look forward to the possibility of discussing how my experience can support your goals.
+
+Sincerely,
+${profile.first_name} ${profile.last_name}`;
           } else if (lowerMsg.includes("interview") || lowerMsg.includes("question") || lowerMsg.includes("prep")) {
-            fallbackContent = `💬 **【Mock Interview】Common Technical & Behavioral Questions for this role:**\n\n1. **Q1**: You mentioned building *ApplyPilot AI*. Can you explain how you bypassed Chrome Extension isolated world prototype setters to achieve 100% autofill success?\n   *💡 Prep Tip: Highlight your custom try-catch fallback architecture and React synthetic event trigger simulation.*\n\n2. **Q2**: At ${company || "our company"}, latency and privacy are highly valued. How do you optimize LLM agent calls on your cloud API backend?\n   *💡 Prep Tip: Emphasize your async/await endpoint designs in FastAPI and the stateless header passing (X-Gemini-API-Key) for supreme security.*`;
+            fallbackContent = `Awesome! Let's mock some core interview questions for the ${roleTitle || "Software Engineer"} role at ${company || "your target company"}.
+
+First, a highly likely technical question about your primary project:
+"I see you developed ApplyPilot AI. Can you tell us how you bypassed the isolated world prototype setters to achieve 100% autofill success?"
+💡 *Prep Tip: Focus on our tailored try-catch fallback mechanism and React synthetic event triggers. It showcases your strong DOM-level engineering!*
+
+Second, a typical systems question:
+"At ${company || "our company"}, latency and privacy are paramount. How did you design your backend for this?"
+💡 *Prep Tip: Talk about your async coroutine handler in FastAPI and the stateless header passing (X-Gemini-API-Key). It is both highly performant and secure!*
+
+What do you think of these two? We can practice one of them, or you can tell me a specific question you want to mock!`;
           } else if (lowerMsg.includes("match") || lowerMsg.includes("fit") || lowerMsg.includes("analyze") || lowerMsg.includes("strength")) {
-            fallbackContent = `💡 **【Job Alignment Profile Analysis】**\n\n* **Role**: ${roleTitle || "Software Engineer"}\n* **Company**: ${company || "your company"}\n\n**🔥 Your Top 3 Strengths**:\n1. **High Stack Alignment**: The required React, TypeScript, and FastAPI skills are exactly the core foundation of your *ApplyPilot AI* development.\n2. **GenAI Practicality**: You have real-world experience building autonomous agents with Google Gemini, which is highly sought after.\n3. **Interdisciplinary Value**: Your operations management tenure at ICBC proves strong leadership, compliance mindset, and corporate collaboration.\n\n**⚠️ Growth Areas & Recommendations**:\n- *Tip*: Emphasize your understanding of continuous integrations (e.g. GitLab MCP) or serverless cloud engines (e.g. Cloud Run) to highlight strong DevOps capabilities.`;
+            fallbackContent = `Sure thing! Let's analyze your matching profile and strengths for the ${roleTitle || "Software Engineer"} role at ${company || "your company"}.
+
+Based on your Profile Vault, your background matches this job exceptionally well:
+
+First is your 【High Technical Stack Alignment】. The required React, TypeScript, and FastAPI are exactly the core foundation of your *ApplyPilot AI* development.
+Second is your 【GenAI Practicality】. Having real-world experience building autonomous browser agents with Gemini puts you in a very hot and rare talent pool.
+Third is your 【Interdisciplinary tenure】 at ICBC, which proves strong leadership, compliance mindset, and cross-functional communication skills.
+
+For areas of growth, I highly recommend highlighting your continuous integrations or serverless cloud engines (e.g. Cloud Run) to prove strong DevOps capabilities.
+
+Does this match your expectations? We can dive deeper into any of your projects to polish it further!`;
           } else {
-            fallbackContent = `👋 **Response regarding "${msg}"**:\n\nHello! I am ApplyPilot AI, your job application copilot. I have mapped your background profile to the active job description for ${company || "this position"}.\n\n* **You asked about**: "${msg}"\n* **Suggestions**: Try clicking one of our high-value quick actions below to:\n  1. Draft a fully tailored **Cover Letter** matching this role.\n  2. **Analyze Matching Strengths** to see your resume compatibility score.\n  3. **Run Mock Interview** to prep with AI-selected questions.\n\nFeel free to ask any specific career or application questions!`;
+            fallbackContent = `Hello there! Regarding "${msg}", I am ApplyPilot AI, your job application copilot.
+
+I have synchronized your candidate background (including your Columbia University MS and the ApplyPilot project) with the scanned job details for the ${roleTitle || "Software Engineer"} position at ${company || "your company"}.
+
+For instant career preparation, you can click any of the action buttons below to:
+1. Click 【✍️ Draft Cover Letter】— to generate a tailored cover letter matching this role using your React & FastAPI experience.
+2. Click 【💡 Analyze Matching Strengths】— to evaluate your profile compatibility and strengths.
+3. Click 【💬 Run Mock Interview】— to start an interactive, high-value mock interview simulation!
+
+Feel free to ask any specific questions, and let's chat!`;
           }
         }
 
